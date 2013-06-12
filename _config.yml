@@ -1,0 +1,5 @@
+baseurl: http://likon.github.com
+permalink: /blog-cn/:year/:month/:day/:title
+markdown: rdiscount
+pygments: true
+date_format: "ordinal"

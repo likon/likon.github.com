@@ -1,1 +1,11 @@
-<h1>GotGitHub's HomePage</h1>It works.\n
+---
+layout: default
+title: likon的技术博客
+---
+
+<ul>
+　　{% for post in site.posts %}
+　　　　<li><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></li>
+　　{% endfor %}
+</ul>
+
