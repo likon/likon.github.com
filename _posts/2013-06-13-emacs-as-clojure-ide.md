@@ -1,35 +1,35 @@
----
+ï»¿---
 layout: blog
-title: emacs×÷ÎªclojureµÄ¿ª·¢»·¾³
+title: emacsä½œä¸ºclojureçš„å¼€å‘ç¯å¢ƒ
 ---
 
 
-clojure×÷ÎªlispµÄÒ»ÖÖ·½ÑÔ£¬ÓÃemacsÀ´±à¼­¼òÖ±¾ÍÊÇ¾øÅäÁË£¬ÒÔÏÂÊÇÅäÖÃemacs×÷ÎªclojureµÄ¿ª·¢»·¾³ÉèÖÃ£º
+clojureä½œä¸ºlispçš„ä¸€ç§æ–¹è¨€ï¼Œç”¨emacsæ¥ç¼–è¾‘ç®€ç›´å°±æ˜¯ç»é…äº†ï¼Œä»¥ä¸‹æ˜¯é…ç½®emacsä½œä¸ºclojureçš„å¼€å‘ç¯å¢ƒè®¾ç½®ï¼š
 
 
-### ×¼±¸¹¤×÷
+### å‡†å¤‡å·¥ä½œ
 
-Ê×ÏÈµÚÒ»²½¾ÍÊÇÏÂÔØ[lein](https://raw.github.com/technomancy/leiningen/stable/bin/lein.bat)¹¤³Ì¹ÜÀíÈí¼ş£¬ÕÒµ½¸Ã½Å±¾Ô´´úÂëµÄ
+é¦–å…ˆç¬¬ä¸€æ­¥å°±æ˜¯ä¸‹è½½[lein](https://raw.github.com/technomancy/leiningen/stable/bin/lein.bat)å·¥ç¨‹ç®¡ç†è½¯ä»¶ï¼Œæ‰¾åˆ°è¯¥è„šæœ¬æºä»£ç çš„
 
 <code>
 if "x%LEIN_JAR%" == "x" set LEIN_JAR=!LEIN_HOME!\self-installs\leiningen-!LEIN_VERSION!-standalone.jar
 </code>
 
-ĞŞ¸Ä³É
+ä¿®æ”¹æˆ
 
 <code>
 if "x%LEIN_JAR%" == "x" set LEIN_JAR="!LEIN_HOME!\self-installs\leiningen-!LEIN_VERSION!-standalone.jar"
 </code>
 
-ÕâÑùĞŞ¸ÄµÄÔ­ÒòÊÇÒòÎªÔÚwindowsÏÂµÄÂ·¾¶ÓĞ¿Õ¸ñ£¬µ¼ÖÂ°²×°ÍêºÃleinÒÔºóÕÕÑùÓÃ²»ÁËµÄÎÊÌâ¡£
+è¿™æ ·ä¿®æ”¹çš„åŸå› æ˜¯å› ä¸ºåœ¨windowsä¸‹çš„è·¯å¾„æœ‰ç©ºæ ¼ï¼Œå¯¼è‡´å®‰è£…å®Œå¥½leinä»¥åç…§æ ·ç”¨ä¸äº†çš„é—®é¢˜ã€‚
 
-È»ºóÖ´ĞĞ<code>lein self-install</code>½øĞĞ×Ô°²×°£¬ÔÚÖ´ĞĞÃüÁîÖ®Ç°Çë¼ì²éÏµÍ³ÓĞwget»òÕßcurlÏÂÔØÈí¼ş£¬·ñÔò¿ÉÄÜ°²×°²»³É¹¦£¨win7µÄÄÚ²¿ÓĞÏÂÔØµÄÃüÁî£¬¿ÉÒÔÌø¹ı£©,ÖÁ´ËleinÓ¦¸Ã°²×°Íê±ÏÁË£¬Ö´ĞĞ<code>lein repl</code>ÊÔÊÔ£¬clojureµÄreplÓ¦¸Ã»á³öÀ´ÁË£¬²»ĞĞµÄ»°¼ì²éÒ»ÏÂ½Å±¾°É¡£
+ç„¶åæ‰§è¡Œ<code>lein self-install</code>è¿›è¡Œè‡ªå®‰è£…ï¼Œåœ¨æ‰§è¡Œå‘½ä»¤ä¹‹å‰è¯·æ£€æŸ¥ç³»ç»Ÿæœ‰wgetæˆ–è€…curlä¸‹è½½è½¯ä»¶ï¼Œå¦åˆ™å¯èƒ½å®‰è£…ä¸æˆåŠŸï¼ˆwin7çš„å†…éƒ¨æœ‰ä¸‹è½½çš„å‘½ä»¤ï¼Œå¯ä»¥è·³è¿‡ï¼‰,è‡³æ­¤leinåº”è¯¥å®‰è£…å®Œæ¯•äº†ï¼Œæ‰§è¡Œ<code>lein repl</code>è¯•è¯•ï¼Œclojureçš„replåº”è¯¥ä¼šå‡ºæ¥äº†ï¼Œä¸è¡Œçš„è¯æ£€æŸ¥ä¸€ä¸‹è„šæœ¬å§ã€‚
 
-### ÉèÖÃemacs×÷ÎªclojureµÄ¿ª·¢»·¾³
+### è®¾ç½®emacsä½œä¸ºclojureçš„å¼€å‘ç¯å¢ƒ
 
-°²×°nreplĞèÒªÓÃµ½emacsµÄpackage°²×°¹ÜÀíÀ©Õ¹£¬ÒòÎªemacs24×Ô´øÁËpackage°²×°¹ÜÀíÀ©Õ¹£¬ËùÒÔ×îºÃ»¹ÊÇÖ±½ÓÏÂÔØemacs24°æ±¾°É£¬Ê¡ÊÂ¡£
+å®‰è£…nrepléœ€è¦ç”¨åˆ°emacsçš„packageå®‰è£…ç®¡ç†æ‰©å±•ï¼Œå› ä¸ºemacs24è‡ªå¸¦äº†packageå®‰è£…ç®¡ç†æ‰©å±•ï¼Œæ‰€ä»¥æœ€å¥½è¿˜æ˜¯ç›´æ¥ä¸‹è½½emacs24ç‰ˆæœ¬å§ï¼Œçœäº‹ã€‚
 
-* ³õÊ¼»¯package»·¾³£¬ÔÚ.emacsÅäÖÃÎÄ¼şÖĞ¼ÓÈëÈçÏÂ´úÂë£¬ÖØĞÂÆô¶¯ºó»á×Ô¶¯¼ÓÔØµÄ£º
+* åˆå§‹åŒ–packageç¯å¢ƒï¼Œåœ¨.emacsé…ç½®æ–‡ä»¶ä¸­åŠ å…¥å¦‚ä¸‹ä»£ç ï¼Œé‡æ–°å¯åŠ¨åä¼šè‡ªåŠ¨åŠ è½½çš„ï¼š
 
 <code>
 (require 'package)
@@ -38,7 +38,7 @@ if "x%LEIN_JAR%" == "x" set LEIN_JAR="!LEIN_HOME!\self-installs\leiningen-!LEIN_
 (package-initialize)
 </code>
 
-* Ê¹ÓÃpackageÏÂÔØclojure-mode²å¼ş£¬<code>M-x package-install clojure-mode</code>£¬ÔÚ.emacsÅäÖÃÎÄ¼şÖĞ¼ÓÈëÈçÏÂ´úÂë£º
+* ä½¿ç”¨packageä¸‹è½½clojure-modeæ’ä»¶ï¼Œ<code>M-x package-install clojure-mode</code>ï¼Œåœ¨.emacsé…ç½®æ–‡ä»¶ä¸­åŠ å…¥å¦‚ä¸‹ä»£ç ï¼š
 
 <code>
 ;; (require 'paredit) if you didn't install via package.el
@@ -46,19 +46,19 @@ if "x%LEIN_JAR%" == "x" set LEIN_JAR="!LEIN_HOME!\self-installs\leiningen-!LEIN_
 (add-hook 'clojure-mode-hook 'turn-on-paredit)
 </code>
 
-ÕâÀï×îºÃ»¹ÊÇ°Ñparedit²å¼ş×°Ò»ÏÂ£¬ÒòÎªËü»á°ïÖúÎÒÃÇºÜºÃ±à¼­lispÓïÑÔµÄ£¬enjoy it!
+è¿™é‡Œæœ€å¥½è¿˜æ˜¯æŠŠpareditæ’ä»¶è£…ä¸€ä¸‹ï¼Œå› ä¸ºå®ƒä¼šå¸®åŠ©æˆ‘ä»¬å¾ˆå¥½ç¼–è¾‘lispè¯­è¨€çš„ï¼Œenjoy it!
 
-* Ê¹ÓÃpackage°²×°nrepl²å¼ş£¬<code>M-x package-install [RET] nrepl [RET]</code>£¬È»ºóÔÚ.emacsÅäÖÃÎÄ¼ş¼ÓÈëÈçÏÂ´úÂë£º 
+* ä½¿ç”¨packageå®‰è£…nreplæ’ä»¶ï¼Œ<code>M-x package-install [RET] nrepl [RET]</code>ï¼Œç„¶ååœ¨.emacsé…ç½®æ–‡ä»¶åŠ å…¥å¦‚ä¸‹ä»£ç ï¼š 
 
 <code>
 (add-to-list 'load-path "~/emacs.d/vendor")
 (require 'nrepl)
 </code>
 
-### ¿ªÊ¼emacsµÄclojureÖ®ÂÃ
+### å¼€å§‹emacsçš„clojureä¹‹æ—…
 
-* ÔÚÄ³¸öÄ¿Â¼ÏÂÊ¹ÓÃ<code>lein new test-project</code>À´´´½¨¹¤³Ì£¬È»ºóÓÃemacs´ò¿ªproject.clj¹¤³ÌÎÄ¼ş£¬ÕâÑùemacs¾ÍÔÚµ±Ç°ÎÄ¼ş¼ĞÏÂÁË£¬È»ºóÔÚemacsÖ´ĞĞ<code>M-x eshell[RET]</code>À´¿ªÒ»¸öÖÕ¶Ë£¬ÔÚ´ËÖÕ¶ËÏÂÖ´ĞĞ<code>lein repl</code>À´¿ªÒ»¸öclojureµÄrepl£¬ÔÙ<code>M-x nrepl[RET]</code>£¬»áÓĞÌáÊ¾ÌîĞ´·şÎñÆ÷IPºÍ¶Ë¿ÚµÄ£¬¶Ë¿ÚÔÚ¿ªÆôÒ»¸öreplÊ±»á¸ø¶¨µÄ£¬ÕâÑù¾Í¿ÉÒÔÔÚemacsµÄreplÀïÊ¹ÓÃnreplÁË¡£
+* åœ¨æŸä¸ªç›®å½•ä¸‹ä½¿ç”¨<code>lein new test-project</code>æ¥åˆ›å»ºå·¥ç¨‹ï¼Œç„¶åç”¨emacsæ‰“å¼€project.cljå·¥ç¨‹æ–‡ä»¶ï¼Œè¿™æ ·emacså°±åœ¨å½“å‰æ–‡ä»¶å¤¹ä¸‹äº†ï¼Œç„¶ååœ¨emacsæ‰§è¡Œ<code>M-x eshell[RET]</code>æ¥å¼€ä¸€ä¸ªç»ˆç«¯ï¼Œåœ¨æ­¤ç»ˆç«¯ä¸‹æ‰§è¡Œ<code>lein repl</code>æ¥å¼€ä¸€ä¸ªclojureçš„replï¼Œå†<code>M-x nrepl[RET]</code>ï¼Œä¼šæœ‰æç¤ºå¡«å†™æœåŠ¡å™¨IPå’Œç«¯å£çš„ï¼Œç«¯å£åœ¨å¼€å¯ä¸€ä¸ªreplæ—¶ä¼šç»™å®šçš„ï¼Œè¿™æ ·å°±å¯ä»¥åœ¨emacsçš„replé‡Œä½¿ç”¨nrepläº†ã€‚
 
-* ÔÚclojureµÄÔ´ÂëÖĞ½øĞĞÌø×ª£¬ÔÚÒÔÉÏ²½Öè¶¼Íê³Éºó£¬¾Í¿ÉÒÔ´ò¿ªÔ´ÂëÎÄ¼ş½øĞĞÌø×ªÁË£¬Ê¹ÓÃ<code>M-.</code>À´¶¨Î»º¯Êı±äÁ¿µÈ£¬<code>M-,</code>·µ»Ø¡£
+* åœ¨clojureçš„æºç ä¸­è¿›è¡Œè·³è½¬ï¼Œåœ¨ä»¥ä¸Šæ­¥éª¤éƒ½å®Œæˆåï¼Œå°±å¯ä»¥æ‰“å¼€æºç æ–‡ä»¶è¿›è¡Œè·³è½¬äº†ï¼Œä½¿ç”¨<code>M-.</code>æ¥å®šä½å‡½æ•°å˜é‡ç­‰ï¼Œ<code>M-,</code>è¿”å›ã€‚
 
-* ÏêÇé¿É²Î¼û[nreplµÄgithub](https://github.com/kingtim/nrepl.el)£¬ÔÚ´Ë¾Í²»×¸ÊöÁË¡£
+* è¯¦æƒ…å¯å‚è§[nreplçš„github](https://github.com/kingtim/nrepl.el)ï¼Œåœ¨æ­¤å°±ä¸èµ˜è¿°äº†ã€‚
