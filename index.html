@@ -5,7 +5,7 @@ title: likon的技术博客
 
 <ul>
 　　{% for post in site.posts %}
-　　　　<li><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>({{ page.date | date: "%Y-%m-%d" }})</li>
+　　　　<li><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>({{ site.time | date_to_long_string }})</li>
 　　{% endfor %}
 </ul>
 
