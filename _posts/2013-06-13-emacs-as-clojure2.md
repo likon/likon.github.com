@@ -10,15 +10,15 @@ clojure作为lisp的一种方言，用emacs来编辑简直就是绝配了，以�
 
 首先第一步就是下载[lein](https://raw.github.com/technomancy/leiningen/stable/bin/lein.bat)工程管理软件，找到该脚本源代码的
 
-<code>
+{% highlight shell %}
 if "x%LEIN_JAR%" == "x" set LEIN_JAR=!LEIN_HOME!\self-installs\leiningen-!LEIN_VERSION!-standalone.jar
-</code>
+{% endhighlight %}
 
 修改成
 
-<code>
+{% highlight shell %}
 if "x%LEIN_JAR%" == "x" set LEIN_JAR="!LEIN_HOME!\self-installs\leiningen-!LEIN_VERSION!-standalone.jar"
-</code>
+{% endhighlight %}
 
 这样修改的原因是因为在windows下的路径有空格，导致安装完好lein以后照样用不了的问题。
 
@@ -30,29 +30,29 @@ if "x%LEIN_JAR%" == "x" set LEIN_JAR="!LEIN_HOME!\self-installs\leiningen-!LEIN_
 
 * 初始化package环境，在.emacs配置文件中加入如下代码，重新启动后会自动加载的：
 
-<code>
+{% highlight lisp %}
 (require 'package)
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize)
-</code>
+{% endhighlight %}
 
 * 使用package下载clojure-mode插件，<code>M-x package-install clojure-mode</code>，在.emacs配置文件中加入如下代码：
 
-<code>
+{% highlight lisp %}
 ;; (require 'paredit) if you didn't install via package.el
 (defun turn-on-paredit () (paredit-mode 1))
 (add-hook 'clojure-mode-hook 'turn-on-paredit)
-</code>
+{% endhighlight %}
 
 这里最好还是把paredit插件装一下，因为它会帮助我们很好编辑lisp语言的，enjoy it!
 
 * 使用package安装nrepl插件，<code>M-x package-install [RET] nrepl [RET]</code>，然后在.emacs配置文件加入如下代码： 
 
-<code>
+{% highlight lisp %}
 (add-to-list 'load-path "~/emacs.d/vendor")
 (require 'nrepl)
-</code>
+{% endhighlight %}
 
 ### 开始emacs的clojure之旅
 
