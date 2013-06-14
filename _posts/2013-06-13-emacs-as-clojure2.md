@@ -1,4 +1,4 @@
-﻿---
+---
 layout: blog
 title: emacs作为clojure的开发环境
 ---
