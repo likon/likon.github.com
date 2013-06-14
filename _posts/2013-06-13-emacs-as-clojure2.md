@@ -24,36 +24,30 @@ clojure作为lisp的一种方言，用emacs来编辑简直就是绝配了，以�
 
 安装nrepl需要用到emacs的package安装管理扩展，因为emacs24自带了package安装管理扩展，所以最好还是直接下载emacs24版本吧，省事。
 
-* 初始化package环境，在.emacs配置文件中加入如下代码，重新启动后会自动加载的：
+初始化package环境，在.emacs配置文件中加入如下代码，重新启动后会自动加载的：
 
-    `
     (require 'package)
     (add-to-list 'package-archives
                  '("marmalade" . "http://marmalade-repo.org/packages/"))
     (package-initialize)
-    `
 
-* 使用package下载clojure-mode插件，`M-x package-install clojure-mode`，在.emacs配置文件中加入如下代码：
+使用package下载clojure-mode插件，`M-x package-install clojure-mode`，在.emacs配置文件中加入如下代码：
 
-    `
     ;; (require 'paredit) if you didn't install via package.el
     (defun turn-on-paredit () (paredit-mode 1))
     (add-hook 'clojure-mode-hook 'turn-on-paredit)
-    `
 
 这里最好还是把paredit插件装一下，因为它会帮助我们很好编辑lisp语言的，enjoy it!
 
-* 使用package安装nrepl插件，`M-x package-install [RET] nrepl [RET]`，然后在.emacs配置文件加入如下代码： 
+使用package安装nrepl插件，`M-x package-install [RET] nrepl [RET]`，然后在.emacs配置文件加入如下代码： 
 
-    `
     (add-to-list 'load-path "~/emacs.d/vendor")
-    (require 'nrepl)
-    `
+    (require 'nrepl) 
 
 ### 开始emacs的clojure之旅
 
-* 在某个目录下使用`lein new test-project`来创建工程，然后用emacs打开project.clj工程文件，这样emacs就在当前文件夹下了，然后在emacs执行`M-x eshell[RET]`来开一个终端，在此终端下执行`lein repl`来开一个clojure的repl，再`M-x nrepl[RET]`，会有提示填写服务器IP和端口的，端口在开启一个repl时会给定的，这样就可以在emacs的repl里使用nrepl了。
+在某个目录下使用`lein new test-project`来创建工程，然后用emacs打开project.clj工程文件，这样emacs就在当前文件夹下了，然后在emacs执行`M-x eshell[RET]`来开一个终端，在此终端下执行`lein repl`来开一个clojure的repl，再`M-x nrepl[RET]`，会有提示填写服务器IP和端口的，端口在开启一个repl时会给定的，这样就可以在emacs的repl里使用nrepl了。
 
-* 在clojure的源码中进行跳转，在以上步骤都完成后，就可以打开源码文件进行跳转了，使用`M-.`来定位函数变量等，`M-,`返回。
+在clojure的源码中进行跳转，在以上步骤都完成后，就可以打开源码文件进行跳转了，使用`M-.`来定位函数变量等，`M-,`返回。
 
-* 详情可参见[nrepl的github](https://github.com/kingtim/nrepl.el)，在此就不赘述了。
+详情可参见[nrepl的github](https://github.com/kingtim/nrepl.el)，在此就不赘述了。
