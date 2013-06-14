@@ -26,23 +26,29 @@ clojure作为lisp的一种方言，用emacs来编辑简直就是绝配了，以�
 
 * 初始化package环境，在.emacs配置文件中加入如下代码，重新启动后会自动加载的：
 
+    `
     (require 'package)
     (add-to-list 'package-archives
                  '("marmalade" . "http://marmalade-repo.org/packages/"))
     (package-initialize)
+    `
 
 * 使用package下载clojure-mode插件，`M-x package-install clojure-mode`，在.emacs配置文件中加入如下代码：
 
+    `
     ;; (require 'paredit) if you didn't install via package.el
     (defun turn-on-paredit () (paredit-mode 1))
     (add-hook 'clojure-mode-hook 'turn-on-paredit)
+    `
 
 这里最好还是把paredit插件装一下，因为它会帮助我们很好编辑lisp语言的，enjoy it!
 
 * 使用package安装nrepl插件，`M-x package-install [RET] nrepl [RET]`，然后在.emacs配置文件加入如下代码： 
 
+    `
     (add-to-list 'load-path "~/emacs.d/vendor")
     (require 'nrepl)
+    `
 
 ### 开始emacs的clojure之旅
 
