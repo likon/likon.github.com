@@ -148,5 +148,73 @@ handle-results函数更新三种状态数据：往crawled-urls中添加已经抓
     (finally (run *agent*))))
 {% endhighlight %}
 
-注意到每个执行动作最后都有`(run *agent*)`的执行动作，其实*agent*在其他线程中是没有定义的，因为这里所有的动作都在thread pool的运行线程中执行，所以*agent*是当前线程下的当前agent。
+注意到每个执行动作最后都有`(run *agent*)`，其实*agent*在其他线程中是没有定义的，因为这里所有的动作都在thread pool的运行线程中执行，所以*agent*是执行动作线程下的当前agent。
 
+综上，这就是使用agent来无间断运行的通常做法。在这个网络爬虫程序中，run函数是将每个agent下一步执行的动作排队，既然每个动作都知道了如何去执行下一步动作，为什么还要添加间接调用执行动作的run函数呢，原因有二：
+
+* run函数可以检查各个执行函数的元属性（meta data）的::blocking属性，以此判断该动作是否阻塞，这样就可以判断使用agent的send和send-off函数来执行agent的下一步动作。
+
+* run还可以检查某个agent是否停掉的状态，通过往agent追加元属性(meta data)的::paused原属性的值达到该目标。
+
+以下是主程序：
+
+{% highlight clojure %}
+;; 检查agent是否被停掉
+(defn paused? [agent] (::paused (meta agent)))
+
+(defn run
+  ([] (doseq [a agents] (run a)))
+  ([a]
+     (when (agents a)
+       (send a (fn [{transition ::t :as state}]
+                 ;; 检查当前agent是否处于停止状态
+                 (when-not (paused? *agent*)
+                   ;; 根据执行动作的::blocking属性来调用send-off还是send
+                   (let [dispatch-fn (if (-> transition meta ::blocking)
+                                       send-off
+                                       send)]
+                     ;; 在threading pool线程执行的send或send-off操作
+                     (dispatch-fn *agent* transition)))
+                 state)))))
+{% endhighlight %}
+
+可以停止掉agent的执行相当重要，因为我们不可能让它们无间断的运行下去。因为我们可以改变agent的pause属性来停止执行动作或者清除掉agent的pause属性来重启执行：
+
+{% highlight clojure %}
+(defn pause
+  ([] (doseq [a agents] (pause a)))
+  ([a] (alter-meta! a assoc ::paused true)))
+
+(defn restart
+  ([] (doseq [a agents] (restart a)))
+  ([a]
+     (alter-meta! a dissoc ::paused)
+     (run a)))
+
+{% endhighlight %}
+
+目前为止所有的基础建设已经搭建好了，现在可以写个测试程序来测试它们了，测试程序如下所示：
+
+{% highlight clojure %}
+(defn test-crawler
+  [agent-count starting-url]
+  ;; 建立所有的agent，用来测试用的
+  (def agents (set (repeatedly agent-count 
+                               #(agent {::t #'get-url :queue url-queue}))))
+  ;; 清除url队列
+  (.clear url-queue)
+
+  ;; 清空状态
+  (swap! crawled-urls empty)
+  (swap! word-freqs empty)
+
+  (.add url-queue starting-url)
+  (run)
+  (Thread/sleep 60000)
+  (pause)
+  [(count @crawled-urls) (count url-queue)])
+{% endhighlight %}
+
+运行的结果如下：
+![运行结果](http://likon.github.com/images/web-crawler-agent-result.png)
+这是用一个agent来执行和用25个agent来执行的效果，结果用25个agent执行的话在1分钟内获取的链接和单词数远远超过用一个agent执行的结果，这就是concurrent的好处，最大化使用系统资源。
