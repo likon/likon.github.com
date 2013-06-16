@@ -218,3 +218,5 @@ handle-results函数更新三种状态数据：往crawled-urls中添加已经抓
 运行的结果如下：
 ![运行结果](http://likon.github.com/images/web-crawler-agent-result.png)
 这是用一个agent来执行和用25个agent来执行的效果，结果用25个agent执行的话在1分钟内获取的链接和单词数远远超过用一个agent执行的结果，这就是concurrent的好处，最大化使用系统资源。
+
+最后代码可以从[这里](https://github.com/likon/clojure-exercise)获得。
