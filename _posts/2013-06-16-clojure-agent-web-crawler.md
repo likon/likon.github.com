@@ -5,9 +5,9 @@ title: clojure之旅：用agent实现网络爬虫
 
 使用clojure的agent实现网络爬虫相当的简单，在这里实现的网络爬虫程序是很基本的，但是麻雀虽小，五脏俱全。
 
-首先，我们先实现一些基本的用来解释网页的使用函数。links-from函数解释网页的链接，并返回链接序列(因为使用了for的序列生成器，因为该序列为惰性序列（lazy sequence))；words-from函数解释网页的单词，对每个单词进行小写转换，返回单词序列，此例中使用[enlive](https://github.com/cgrand/enlive)来分析html数据的clojure包，以下是两个函数的实现：
+首先，我们先实现一些基本的用来解释网页的实用函数。links-from函数解释网页的链接，并返回链接序列(因为使用了for的序列生成器，所以该序列为惰性序列（lazy sequence))；words-from函数解释网页的单词，对每个单词进行小写转换，返回单词序列，此例中使用[enlive包](https://github.com/cgrand/enlive)来解析html数据的，以下是两个函数的实现：
 
-{% highlight clojure linenos %}
+{% highlight clojure %}
 ;; 引用网页解释的clojure包
 (require '[net.cgrand.enlive-html :as enlive])
 ;; 引用clojure核心包，只使用lower-case函数，即转换单词小写
@@ -60,4 +60,93 @@ title: clojure之旅：用agent实现网络爬虫
 (def crawled-urls (atom #{}))
 (def word-freqs (atom {})))
 {% endhighlight %}
+
+为了能更好和最大化使用系统资源，我们将建立一堆agent来实现网页抓取、解析网页（提取出网页链接和单词）、合并单词的有限状态机的转换过程，在使用agent时，需要多考虑agent维护的状态和对该状态进行什么样的处理。在多数情况下，我们可以使用agent来实现有限状态机（即是agent维护的当前状态和对该状态进行什么样的处理），在此网络爬虫中每个agent的状态机如下所示：
+![网页抓取解释的有限状态机](http://likon.github.com/images/clojure-web-crawler.jpg)
+
+* 此三个动作将对应下面将要介绍的get-url,process和handle-results函数。
+
+一个agent的状态扮演的角色已经很明显了：在从网页链接获取网页之前，agent需要获得URL地址；在提取出网页链接和单词之前，agent需要获得网页内容；在合并单词之前，agent需要获得解析的结果。既然agent的状态不多，我们可以简化成为每个agent提供当前状态和下一步将要做的事情。
+
+说了这么多，已经迫不及待看看怎么实现这些agent了吧。根据有限状态机图示，首先所有agent的初始化状态应该是维护链接的队列url-queue，因为下一步我们需要需要从url-queue中获取一个链接来抓取网页数据，这样我们可以这样定义每个agent：
+
+{% highlight clojure %}
+; 因为即将要用到get-url函数，所以要提前定义
+(declare get-url)
+; 每个agent都有::t字段，表示下一步将要执行的动作
+(def agents (set (repeatedly 25 #(agent {::t #'get-url :queue url-queue}))))
+{% endhighlight %}
+
+get-url函数将会等待线程安全队列获取网页链接，如果等到后，获取该链接的网页。然后返回包含该网页地址、网页内容和下一步要执行的动作（即是process）的map：
+
+{% highlight clojure %}
+(declare run process handle-results)
+;; ^::blocking是函数的meta data，表示该函数式阻塞式的
+;; 对使用者来说有用
+(defn ^::blocking get-url
+  [{:keys [^BlockingQueue queue] :as state}]
+  ;; 从url-queue中获取一个链接，一直等待状态
+  (let [url (as-url (.take queue))]
+    (try
+      ;; 如果该网页已经抓去过，则原封不动返回
+      (if (@crawled-urls url)
+        state
+        ;; 否则抓取该链接的网页，并返回包含内容和下一步动作的map
+        {:url url
+         :content (slurp url)
+         ::t #'process})
+      ;; 出错时原封不动返回
+      (catch Exception e
+        state)
+      ;; 这里保证有限状态机不会停止，最后启动动作，继续执行下一步动作
+      ;; *agent*表示当前的agent
+      (finally (run *agent*)))))
+{% endhighlight %}
+
+
+process函数对网页进行解析，使用最先定义的links-from和words-from实用函数来提取网页链接和提取单词，并统计每个单词的词频，最后返回所有网页链接序列、单词以及其词频组合的序列、当前网页链接和下一步将要执行的动作（即是handle-results)的map：
+
+{% highlight clojure %}
+(defn process
+  [{:keys [url content]}]
+  (try
+    ;; 从字串转换成StringReader对象
+    (let [html (enlive/html-resource (java.io.StringReader. content))]
+      {::t #'handle-results
+       :url url
+       ;; links包含了网页中所有的链接
+       :links (links-from url html)
+       ;; 从单词序列中建立以单词为key，词频为value的map
+       :words (reduce (fn [m word]
+                        ;; fnil表示如果key刚添加的话则从1开始计数
+                        (update-in m [word] (fnil inc 0)))
+                      {}
+                      (words-from html))})
+    ;; 继续执行下一步动作 
+    (finally (run *agent*))))
+{% endhighlight %}
+
+handle-results函数更新三种状态数据：往crawled-urls中添加已经抓取网页的链接，往url-queue中添加所有的新连接，往word-freqs合并单词和词频。由图所知，handle-results处理之后需要需要继续从url-queue中获取得到链接来获取网页，然后提取网页和单词，最后又执行此函数，如此循环往复，所以该函数需要返回原始的agent状态：
+
+{% highlight clojure %}
+(defn ^::blocking handle-results
+  [{:keys [url links words]}]
+  (try
+    ;; 添加已经抓去过的网页集
+    (swap! crawled-urls conj url)
+    ;; 往队列中添加所有的链接，其他等待的agent就可以获取一个链接
+    ;; 其他的动作就可以王下走了
+    (doseq [url links]
+      (.put url-queue url))
+    ;; 更新单词和词频，词频用+来合并
+    (swap! word-freqs (partial merge-with +) words)
+    
+    ;; 最终返回原始的状态
+    {::t #'get-url :queue url-queue}
+
+    ;;继续执行下一步动作
+    (finally (run *agent*))))
+{% endhighlight %}
+
+注意到每个执行动作最后都有`(run *agent*)`的执行动作，其实*agent*在其他线程中是没有定义的，因为这里所有的动作都在thread pool的运行线程中执行，所以*agent*是当前线程下的当前agent。
 
